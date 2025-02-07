@@ -3,16 +3,12 @@ import * as z from "zod";
 import { cookies } from "next/headers";
 import { COOKIES_KEYS } from "@/utils/cookies";
 import { redirect } from "next/navigation";
-import { API_TAG } from "@/utils/apiTags";
 import { findErrors } from "@/utils/serverHelperFnc";
 import { TLoginState } from "@/models/AuthModels";
 import AppRoutes from "@/RoutePaths";
 
 const schema = z.object({
-  userName: z
-    .string()
-    .min(1, "Email required")
-    .email({ message: "Invalid email address" }),
+  userName: z.string().min(10, "Username required and at least 10 characters"),
   password: z.string().min(1, "Password required"),
 });
 

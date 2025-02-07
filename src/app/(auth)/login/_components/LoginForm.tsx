@@ -6,9 +6,9 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 
 import { Button } from "@/components/ui/button";
-import { Spinner } from "@/components/ui/spinner";
-import { TLoginState } from "../../../../models/AuthModels";
+import { TLoginState } from "@/models/AuthModels";
 import { handleLogin } from "../actions";
+import { Spinner } from "@/components/ui/spinner";
 
 const LoginForm = () => {
   const [state, dispatch, isPending] = useActionState<
@@ -37,20 +37,20 @@ const LoginForm = () => {
     >
       <div className="grid w-full items-center gap-4">
         <motion.div className="flex flex-col space-y-1.5" layout="position">
-          <Label htmlFor="email">Email</Label>
+          <Label htmlFor="userName">Username</Label>
           <Input
-            id="email"
-            placeholder="Enter your email..."
-            name="email"
-            defaultValue={state?.email}
+            id="userName"
+            placeholder="Enter your username..."
+            name="userName"
+            defaultValue={state?.userName}
           />
 
-          {state?.emailErrors && (
+          {state?.userNameErrors && (
             <motion.span
               className="text-red-500 text-[12px]"
               animate={animationConfig}
             >
-              {state.emailErrors.join(", ")}
+              {state.userNameErrors.join(", ")}
             </motion.span>
           )}
         </motion.div>

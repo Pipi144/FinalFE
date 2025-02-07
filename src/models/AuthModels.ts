@@ -6,3 +6,8 @@ export type TLoginState = {
   serverErrors?: string[];
   success?: boolean;
 };
+
+export type TAuthPayload = {
+  username: string;
+  password: string;
+};
