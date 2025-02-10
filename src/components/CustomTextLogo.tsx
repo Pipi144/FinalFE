@@ -9,13 +9,17 @@ type Props = React.DetailedHTMLProps<
 
 const CustomTextLogo = forwardRef<HTMLDivElement, Props>(
   ({ name, ...props }, ref) => {
-    const nameArr = name.split(" ");
+    const nameArr = name.split("").filter((_, idx) => idx < 2);
     return (
-      <div ref={ref} {...props} className="">
+      <div
+        ref={ref}
+        {...props}
+        className="rounded-full  bg-cyan-400 px-2 aspect-square flex justify-center items-center"
+      >
         {nameArr.map((word, index) => (
           <span
             key={index}
-            className="text-3xl md:text-4xl font-bold text-primary"
+            className="text-base md:text-lg font-bold leading-none h-fit text-white"
           >
             {word.toUpperCase()}
           </span>

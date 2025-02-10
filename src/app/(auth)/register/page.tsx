@@ -1,3 +1,4 @@
+import QuizAppRoutes from "@/RoutePaths";
 import {
   CardContent,
   CardDescription,
@@ -6,29 +7,28 @@ import {
 } from "@/components/ui/card";
 import Link from "next/link";
 import React from "react";
-import QuizAppRoutes from "@/RoutePaths";
-import LoginForm from "./_components/LoginForm";
+import RegisterForm from "./_components/RegisterForm";
 
-const Login = () => {
+const Register = () => {
   return (
     <>
       <CardHeader className="items-center justify-center !text-white">
-        <CardTitle className="md:text-[30px]">Login</CardTitle>
+        <CardTitle>Register</CardTitle>
         <CardDescription className="md:text-[14px]">
-          {"Don't have an account? "}
+          Already have an account?{" "}
           <Link
-            href={QuizAppRoutes.Register}
-            className="text-sky-600 hover:text-sky-300 transition-all duration-200 ease-linear"
+            href={QuizAppRoutes.Login}
+            className="text-sky-600 hover:text-sky-300 transition-all duration-200 ease-linear "
           >
-            Register
+            Login
           </Link>
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <LoginForm />
+        <RegisterForm />
       </CardContent>
     </>
   );
 };
 
-export default Login;
+export default Register;

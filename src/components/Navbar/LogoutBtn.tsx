@@ -22,7 +22,7 @@ const LogoutBtn = () => {
       className="ml-[15px]"
       onClick={() => logOut()}
     >
-      <IoLogOutOutline className="text-white" size={25} />
+      <IoLogOutOutline size={25} />
     </AnimatedButton>
   );
 };

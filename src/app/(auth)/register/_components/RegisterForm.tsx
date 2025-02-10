@@ -1,58 +1,44 @@
 "use client";
-
-import { AnimationProps, motion } from "framer-motion";
 import React, { useState } from "react";
+import { AnimationProps, motion } from "framer-motion";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-
 import { Button } from "@/components/ui/button";
-import { TAuthState } from "@/models/AuthModels";
 import { Spinner } from "@/components/ui/spinner";
+import { TAuthState } from "@/models/AuthModels";
+import { useRouter } from "next/router";
+import useAuth from "@/hooks/useAuth";
+import AppRoutes from "@/RoutePaths";
 import * as z from "zod";
 import { produce } from "immer";
-import useAuth from "@/hooks/useAuth";
 import { findErrors } from "@/utils/helperFncs";
-import { useAuthStore } from "@/stores/authStore";
-import { useShallow } from "zustand/react/shallow";
-import { useRouter } from "next/navigation";
-import AppRoutes from "@/RoutePaths";
 
 const schema = z.object({
   userName: z.string().min(5, "Username required and at least 5 characters"),
   password: z.string().min(1, "Password required"),
 });
-const LoginForm = () => {
-  const [loginState, setLoginState] = useState<TAuthState>({
+const RegisterForm = () => {
+  const [registerState, setRegisterState] = useState<TAuthState>({
     userName: "",
     password: "",
   });
-  const { setCurrentUser } = useAuthStore(
-    useShallow((state) => ({ setCurrentUser: state.setCurrentUser }))
-  );
   const router = useRouter();
-  const { login: loginMutation } = useAuth({
-    loginProps: {
-      onSuccessLogin: (user) => {
-        setCurrentUser(user);
-        router.replace(AppRoutes.Home);
+
+  const { register: registerMutation } = useAuth({
+    registerProps: {
+      onSuccessRegister: (user) => {
+        router.push(AppRoutes.Login);
       },
-      onErrorLogin: (err) =>
-        setLoginState(
-          produce((draft) => {
-            draft.serverErrors = [err.message];
-          })
-        ),
     },
   });
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
     const validation = schema.safeParse({
-      userName: loginState.userName,
-      password: loginState.password,
+      userName: registerState.userName,
+      password: registerState.password,
     });
 
     if (!validation.success) {
-      setLoginState(
+      setRegisterState(
         produce((draft) => {
           draft.userNameErrors = findErrors(
             "userName",
@@ -64,12 +50,11 @@ const LoginForm = () => {
           );
         })
       );
-
       return;
     }
-    loginMutation.mutate({
-      username: loginState.userName,
-      password: loginState.password,
+    registerMutation.mutate({
+      username: registerState.userName,
+      password: registerState.password,
     });
   };
 
@@ -88,29 +73,22 @@ const LoginForm = () => {
       layout="size"
       transition={{ damping: 16, mass: 0.4, bounceDamping: 14 }}
     >
-      <div className="grid w-full items-center gap-4 !text-white">
-        <motion.div className="flex flex-col space-y-1.5" layout="position">
-          <Label htmlFor="userName">Username</Label>
+      <div className="grid w-full items-center gap-4 text-white">
+        <motion.div className="flex flex-col space-y-1.5 " layout="position">
+          <Label htmlFor="username">Username</Label>
           <Input
-            id="userName"
+            id="username"
             placeholder="Enter your username..."
-            name="userName"
-            value={loginState?.userName}
-            onChange={(e) => {
-              setLoginState(
-                produce((draft) => {
-                  draft.userName = e.target.value;
-                })
-              );
-            }}
+            name="username"
+            defaultValue={registerState?.userName}
           />
 
-          {loginState?.userNameErrors && (
+          {registerState?.userNameErrors && (
             <motion.span
               className="text-red-500 text-[12px]"
               animate={animationConfig}
             >
-              {loginState.userNameErrors.join(", ")}
+              {registerState.userNameErrors.join(", ")}
             </motion.span>
           )}
         </motion.div>
@@ -121,48 +99,45 @@ const LoginForm = () => {
             placeholder="Enter your password..."
             type="password"
             name="password"
-            value={loginState?.password}
-            onChange={(e) => {
-              setLoginState(
-                produce((draft) => {
-                  draft.password = e.target.value;
-                })
-              );
-            }}
+            defaultValue={registerState?.password}
           />
-          {loginState?.passwordErrors && (
+          {registerState?.passwordErrors && (
             <motion.span
               className="text-red-500 text-[12px]"
               animate={animationConfig}
             >
-              {loginState.passwordErrors.join(",")}
+              {registerState.passwordErrors.join(",")}
             </motion.span>
           )}
         </motion.div>
 
-        {loginState?.serverErrors && (
+        {registerState?.serverErrors && (
           <motion.span
             className="text-red-500 text-[12px]"
             animate={animationConfig}
           >
-            {loginState.serverErrors.join(",")}
+            {registerState.serverErrors.join(",")}
           </motion.span>
         )}
       </div>
 
       <Button
         variant="outline"
-        className="w-full bg-black text-white border-none mt-[30px]"
+        className="w-full border-none mt-[30px] bg-white text-black hover:bg-white hover:text-black"
         type="submit"
-        disabled={loginMutation.isPending}
+        disabled={registerMutation.isPending}
       >
-        Login
-        {loginMutation.isPending && (
-          <Spinner size="medium" className="text-white " />
+        {registerMutation.isPending ? (
+          <>
+            Submitting...
+            <Spinner size="medium" className="text-white " />
+          </>
+        ) : (
+          "Submit"
         )}
       </Button>
     </motion.form>
   );
 };
 
-export default LoginForm;
+export default RegisterForm;

@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 
 import "./globals.css";
 import RootProvider from "@/Providers/RootProvider";
+import Navbar from "@/components/Navbar/Navbar";
+import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
   title: "FizzBuzzPT",
@@ -16,7 +18,19 @@ export default function RootLayout({
   return (
     <RootProvider>
       <html lang="en">
-        <body>{children}</body>
+        <head>
+          <link
+            rel="icon"
+            href="/assets/images/icon?<generated>"
+            type="image/<generated>"
+            sizes="<generated>"
+          />
+        </head>
+        <body>
+          <Navbar />
+          {children}
+          <Toaster />
+        </body>
       </html>
     </RootProvider>
   );

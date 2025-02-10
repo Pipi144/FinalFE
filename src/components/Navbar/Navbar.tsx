@@ -1,3 +1,4 @@
+"use client";
 import QuizAppRoutes from "@/RoutePaths";
 
 import Link from "next/link";
@@ -13,23 +14,23 @@ import CustomTextLogo from "../CustomTextLogo";
 import { useAuthStore } from "@/stores/authStore";
 import { useShallow } from "zustand/react/shallow";
 
-const Navbar = async () => {
+const Navbar = () => {
   const { currentUser } = useAuthStore(
     useShallow((state) => ({ currentUser: state.currentUser }))
   );
 
   return (
-    <div className="shadow-navMenuShadow w-full fixed top-0 max-w-[1280px] p-[20px] self-center flex flex-row items-center">
+    <div className=" w-full fixed top-0 max-w-[1280px] p-[20px] self-center flex flex-row items-center">
       <Link
         href={QuizAppRoutes.Home}
         className="cursor-pointer flex flex-row items-center"
       >
         <Image
-          width={25}
-          height={25}
+          width={40}
+          height={40}
           src={iconImg}
           alt="App icon"
-          className="md:w-[30px] md:h-[30px] object-contain"
+          className="md:w-[50px] md:h-[50px] object-cover"
         />
       </Link>
 
