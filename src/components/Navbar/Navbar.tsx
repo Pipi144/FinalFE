@@ -6,9 +6,7 @@ import React, { Suspense } from "react";
 
 import AnimatedButton from "../AnimatedComponents/animated-button";
 import Image from "next/image";
-import iconImg from "../../app/favicon.ico";
 
-import { Spinner } from "../ui/spinner";
 import LogoutBtn from "./LogoutBtn";
 import CustomTextLogo from "../CustomTextLogo";
 import { useAuthStore } from "@/stores/authStore";
@@ -20,28 +18,26 @@ const Navbar = () => {
   );
 
   return (
-    <div className=" w-full fixed top-0 max-w-[1280px] p-[20px] self-center flex flex-row items-center">
+    <div className="w-full fixed top-0 max-w-[1280px] p-[20px] self-center flex flex-row items-center">
       <Link
         href={QuizAppRoutes.Home}
         className="cursor-pointer flex flex-row items-center"
+        as="image"
       >
         <Image
-          width={40}
-          height={40}
-          src={iconImg}
-          alt="App icon"
-          className="md:w-[50px] md:h-[50px] object-cover"
+          width={30}
+          height={30}
+          src={"/favicon.ico"}
+          alt="Favicon"
+          className="md:w-[40px] md:h-[50px] object-contain"
+          priority={true}
         />
       </Link>
 
       {currentUser ? (
         <>
           <AnimatedButton className="ml-auto">
-            <Suspense
-              fallback={<Spinner size={"small"} className="text-blue-400" />}
-            >
-              <CustomTextLogo name={currentUser.username} />
-            </Suspense>
+            <CustomTextLogo name={currentUser.username} />
           </AnimatedButton>
           <LogoutBtn />
         </>

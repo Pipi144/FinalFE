@@ -7,3 +7,11 @@ export const findErrors = (fieldName: string, errors: ZodIssue[]) => {
     })
     .map((item) => item.message);
 };
+
+export const removeFalsyProps = <T extends Record<string, any>>(
+  obj: T
+): Partial<T> => {
+  return Object.fromEntries(
+    Object.entries(obj).filter(([_, value]) => Boolean(value))
+  ) as Partial<T>;
+};

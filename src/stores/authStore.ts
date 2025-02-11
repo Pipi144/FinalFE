@@ -1,9 +1,9 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { persist, PersistStorage } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 import { getCookie, setCookie, deleteCookie } from "cookies-next/client";
-import { COOKIES_KEYS } from "@/utils/cookies";
 import { TUser } from "@/models/user";
+import { COOKIES_KEYS } from "@/utils/cookies";
 
 type TAuthStore = {
   currentUser: TUser | null;
@@ -11,39 +11,48 @@ type TAuthStore = {
   removeUser: () => void;
 };
 
-//  Custom Cookie Storage
-const cookieStorage = {
-  getItem: (key: string) => {
-    const value = getCookie(key);
-    return value ? JSON.parse(value) : null;
+// Custom Cookie Storage Handler with JSON Parsing
+const cookieStorage: PersistStorage<TAuthStore> = {
+  getItem: (name) => {
+    if (typeof window === "undefined") return null; // Prevents SSR errors
+    const cookieValue = getCookie(name);
+    return cookieValue ? JSON.parse(cookieValue) : null;
   },
-  setItem: (key: string, value: any) => {
-    setCookie(key, JSON.stringify(value), { maxAge: 60 * 60 * 24 * 30 }); // ✅ 30 days expiry
+  setItem: (name, value) => {
+    setCookie(name, JSON.stringify(value), { maxAge: 60 * 60 * 24 * 7 }); //  7-day expiration
   },
-  removeItem: (key: string) => {
-    deleteCookie(key);
+  removeItem: (name) => {
+    deleteCookie(name);
   },
 };
 
-//  Zustand store with persist & cookies
+// Zustand Store with Cookie Persistence
 export const useAuthStore = create(
   persist(
     immer<TAuthStore>((set) => ({
-      currentUser: cookieStorage.getItem(COOKIES_KEYS.CurrentUser), // ✅ Load from cookie initially
+      currentUser: null, //  Default state to prevent hydration mismatch
       setCurrentUser: (user) =>
         set((state) => {
           state.currentUser = user;
-          cookieStorage.setItem(COOKIES_KEYS.CurrentUser, user);
         }),
-      removeUser: () =>
+      removeUser: () => {
         set((state) => {
-          cookieStorage.removeItem(COOKIES_KEYS.CurrentUser);
           state.currentUser = null;
-        }),
+        });
+        useAuthStore.persist.clearStorage();
+      },
     })),
     {
-      name: COOKIES_KEYS.CurrentUser, // ✅ Persist Key
-      storage: cookieStorage, // ✅ Use cookieStorage instead of localStorage
+      name: COOKIES_KEYS.CurrentUser, // ✅ Key for the cookie
+      storage: cookieStorage, // ✅ Use the updated cookieStorage
     }
   )
 );
+
+// Client-Only Zustand Hook (Fixes Hydration Issues)
+export const useClientAuthStore = () => {
+  const isClient = typeof window !== "undefined";
+  return isClient
+    ? useAuthStore()
+    : { currentUser: null, setCurrentUser: () => {}, removeUser: () => {} };
+};

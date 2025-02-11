@@ -1,4 +1,5 @@
 import { loginApi, registerApi } from "@/apis/auth";
+import { TAuthPayload } from "@/models/AuthModels";
 import { TServerError } from "@/models/ServerErrorRespond";
 import { TUser } from "@/models/user";
 import { useMutation } from "@tanstack/react-query";
@@ -6,20 +7,20 @@ import { useMutation } from "@tanstack/react-query";
 type TAuthProps = {
   loginProps?: {
     onSuccessLogin?: (user: TUser) => void;
-    onErrorLogin?: (error: Error) => void;
+    onErrorLogin?: (error: TServerError) => void;
   };
   registerProps?: {
     onSuccessRegister?: (user: TUser) => void;
-    onErrorRegister?: (error: Error) => void;
+    onErrorRegister?: (error: TServerError) => void;
   };
 };
 const useAuth = (authProps: TAuthProps = {}) => {
-  const login = useMutation({
+  const login = useMutation<TUser, TServerError, TAuthPayload>({
     mutationKey: ["login"],
     mutationFn: loginApi,
     onSuccess(res, variables, context) {
       if (authProps?.loginProps?.onSuccessLogin)
-        authProps?.loginProps?.onSuccessLogin(res.data);
+        authProps?.loginProps?.onSuccessLogin(res);
     },
     onError(error, variables, context) {
       if (authProps?.loginProps?.onErrorLogin)
@@ -27,12 +28,12 @@ const useAuth = (authProps: TAuthProps = {}) => {
     },
   });
 
-  const register = useMutation({
+  const register = useMutation<TUser, TServerError, TAuthPayload>({
     mutationKey: ["register"],
     mutationFn: registerApi,
     onSuccess(res, variables, context) {
       if (authProps?.registerProps?.onSuccessRegister)
-        authProps?.registerProps?.onSuccessRegister(res.data);
+        authProps?.registerProps?.onSuccessRegister(res);
     },
     onError(error, variables, context) {
       if (authProps?.registerProps?.onErrorRegister)

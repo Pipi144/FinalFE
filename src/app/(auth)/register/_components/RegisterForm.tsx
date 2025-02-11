@@ -6,12 +6,12 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { TAuthState } from "@/models/AuthModels";
-import { useRouter } from "next/router";
 import useAuth from "@/hooks/useAuth";
 import AppRoutes from "@/RoutePaths";
 import * as z from "zod";
 import { produce } from "immer";
 import { findErrors } from "@/utils/helperFncs";
+import { useRouter } from "next/navigation";
 
 const schema = z.object({
   userName: z.string().min(5, "Username required and at least 5 characters"),
@@ -29,9 +29,17 @@ const RegisterForm = () => {
       onSuccessRegister: (user) => {
         router.push(AppRoutes.Login);
       },
+      onErrorRegister: (err) => {
+        setRegisterState(
+          produce((draft) => {
+            draft.serverErrors = [err.message];
+          })
+        );
+      },
     },
   });
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     const validation = schema.safeParse({
       userName: registerState.userName,
       password: registerState.password,
@@ -80,10 +88,17 @@ const RegisterForm = () => {
             id="username"
             placeholder="Enter your username..."
             name="username"
-            defaultValue={registerState?.userName}
+            value={registerState.userName}
+            onChange={(e) =>
+              setRegisterState(
+                produce((draft) => {
+                  draft.userName = e.target.value;
+                })
+              )
+            }
           />
 
-          {registerState?.userNameErrors && (
+          {registerState.userNameErrors && (
             <motion.span
               className="text-red-500 text-[12px]"
               animate={animationConfig}
@@ -99,7 +114,14 @@ const RegisterForm = () => {
             placeholder="Enter your password..."
             type="password"
             name="password"
-            defaultValue={registerState?.password}
+            value={registerState.password}
+            onChange={(e) =>
+              setRegisterState(
+                produce((draft) => {
+                  draft.password = e.target.value;
+                })
+              )
+            }
           />
           {registerState?.passwordErrors && (
             <motion.span
