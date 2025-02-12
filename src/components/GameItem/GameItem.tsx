@@ -5,6 +5,8 @@ import dayjs from "dayjs";
 import { MdModeEdit, MdOutlineDelete } from "react-icons/md";
 import TooltipButton from "../TooltipButton";
 import { IoIosPlay } from "react-icons/io";
+import Link from "next/link";
+import AppRoutes from "@/RoutePaths";
 
 type Props = {
   game: TBasicGame;
@@ -23,7 +25,9 @@ const GameItem = ({ game }: Props) => {
       <TableCell colSpan={1} className="flex items-center justify-end !h-fit">
         <TooltipButton
           triggerComponent={
-            <MdModeEdit className="text-lg mx-2 cursor-pointer" />
+            <Link href={`${AppRoutes.Game}/${game.gameId}`}>
+              <MdModeEdit className="text-lg mx-2 cursor-pointer" />
+            </Link>
           }
           content="Edit game"
         />

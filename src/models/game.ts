@@ -1,4 +1,4 @@
-import { TBasicGameRule } from "./gameRule";
+import { TBasicGameRule, TGameRule } from "./gameRule";
 import { TUser } from "./user";
 
 export type TBasicGame = {
@@ -12,7 +12,7 @@ export type TBasicGame = {
 
 export type TGame = TBasicGame & {
   user: TUser;
-  gameRules: TBasicGameRule[];
+  gameRules: TGameRule[];
 };
 
 export type TGetGameParams = {
@@ -27,3 +27,8 @@ export type TAddGamePayload = {
   numberRange: number;
   gameRules: TBasicGameRule[];
 };
+
+export type TUpdateGamePayload = Partial<
+  Pick<TAddGamePayload, "gameName" | "timeLimit" | "numberRange">
+> &
+  Pick<TBasicGame, "gameId">;

@@ -31,6 +31,7 @@ const GameProvider = ({ children }: Props) => {
     gameRules: [],
     numberRange: 10,
   });
+
   const resetAddGamePayload = useCallback(() => {
     setAddGamePayload({
       gameName: "",
