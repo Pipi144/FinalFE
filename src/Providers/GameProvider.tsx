@@ -1,6 +1,13 @@
 import { TAddGamePayload } from "@/models/game";
 import { useAuthStore } from "@/stores/authStore";
-import React, { PropsWithChildren, useMemo, useState } from "react";
+import { produce } from "immer";
+import React, {
+  PropsWithChildren,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { useShallow } from "zustand/react/shallow";
 
 type Props = PropsWithChildren;
@@ -10,6 +17,7 @@ type TGameContextValue = {
   setSearchGameValue: React.Dispatch<React.SetStateAction<string>>;
   addGamePayload: TAddGamePayload;
   setAddGamePayload: React.Dispatch<React.SetStateAction<TAddGamePayload>>;
+  resetAddGamePayload: () => void;
 };
 const GameContext = React.createContext<TGameContextValue | null>(null);
 const GameProvider = ({ children }: Props) => {
@@ -23,6 +31,15 @@ const GameProvider = ({ children }: Props) => {
     gameRules: [],
     numberRange: 10,
   });
+  const resetAddGamePayload = useCallback(() => {
+    setAddGamePayload({
+      gameName: "",
+      timeLimit: 0,
+      createdByUserId: currentUser?.userId.toString() ?? "0",
+      gameRules: [],
+      numberRange: 10,
+    });
+  }, [currentUser]);
   const [searchGameValue, setSearchGameValue] = useState("");
 
   const contextVal: TGameContextValue = useMemo(
@@ -31,9 +48,19 @@ const GameProvider = ({ children }: Props) => {
       setSearchGameValue,
       addGamePayload,
       setAddGamePayload,
+      resetAddGamePayload,
     }),
-    [searchGameValue, addGamePayload]
+    [searchGameValue, addGamePayload, resetAddGamePayload]
   );
+  useEffect(() => {
+    if (currentUser)
+      setAddGamePayload(
+        produce((draft) => {
+          draft.createdByUserId = currentUser?.userId.toString();
+        })
+      );
+  }, [currentUser]);
+
   return (
     <GameContext.Provider value={contextVal}>{children}</GameContext.Provider>
   );
