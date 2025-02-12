@@ -5,6 +5,7 @@ const AppRoutes = {
 
   // authorized paths
   Game: `/game`,
+  CreateGame: `/game/create`,
 };
 
 export const Unauthorized_Routes = [

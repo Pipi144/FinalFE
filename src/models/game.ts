@@ -19,3 +19,11 @@ export type TGetGameParams = {
   createdByUserId?: string;
   gameName?: string;
 };
+
+export type TAddGamePayload = {
+  gameName: string;
+  timeLimit: number;
+  createdByUserId: string;
+  numberRange: number;
+  gameRules: TBasicGameRule[];
+};

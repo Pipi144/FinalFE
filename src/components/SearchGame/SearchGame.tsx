@@ -21,7 +21,7 @@ const SearchGame = (props: Props) => {
 
   return (
     <AnimatedDiv
-      className="flex items-center border-solid border-[1px] border-gray-400 rounded-sm px-3 py-1 overflow-hidden"
+      className="flex items-center border-solid border-[1px] border-gray-400 rounded-sm px-3 py-1 overflow-hidden ml-auto"
       layout
     >
       <Input

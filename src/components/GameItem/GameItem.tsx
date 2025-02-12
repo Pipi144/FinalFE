@@ -1,0 +1,51 @@
+import { TBasicGame } from "@/models/game";
+import React, { memo } from "react";
+import { TableCell, TableRow } from "../ui/table";
+import dayjs from "dayjs";
+import { MdModeEdit, MdOutlineDelete } from "react-icons/md";
+import TooltipButton from "../TooltipButton";
+import { IoIosPlay } from "react-icons/io";
+
+type Props = {
+  game: TBasicGame;
+};
+
+const GameItem = ({ game }: Props) => {
+  return (
+    <TableRow className="h-fit">
+      <TableCell className="font-medium" colSpan={2}>
+        {game.gameName}
+      </TableCell>
+      <TableCell colSpan={1}>
+        {dayjs(game.createdAt).format("DD/MM/YYYY")}
+      </TableCell>
+      <TableCell colSpan={1}>{game.timeLimit} minutes</TableCell>
+      <TableCell colSpan={1} className="flex items-center justify-end !h-fit">
+        <TooltipButton
+          triggerComponent={
+            <MdModeEdit className="text-lg mx-2 cursor-pointer" />
+          }
+          content="Edit game"
+        />
+
+        <TooltipButton
+          triggerComponent={
+            <IoIosPlay className="text-lg mx-2 cursor-pointer" />
+          }
+          content="Play game"
+        />
+        <TooltipButton
+          triggerComponent={
+            <MdOutlineDelete
+              className="text-lg mx-2 cursor-pointer"
+              color="red"
+            />
+          }
+          content="Delete game"
+        />
+      </TableCell>
+    </TableRow>
+  );
+};
+
+export default memo(GameItem);

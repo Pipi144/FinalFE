@@ -9,7 +9,7 @@ export default function RootLayout({
 }>) {
   return (
     <GameProvider>
-      <div className="flex w-full h-full flex-col items-center justify-center pt-[90px]">
+      <div className="flex w-full h-[calc(100% - 90px)] flex-col items-center justify-center pt-[90px] max-w-screen-lg self-center overflow-hidden ">
         {children}
       </div>
     </GameProvider>

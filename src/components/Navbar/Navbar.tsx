@@ -11,14 +11,16 @@ import LogoutBtn from "./LogoutBtn";
 import CustomTextLogo from "../CustomTextLogo";
 import { useAuthStore } from "@/stores/authStore";
 import { useShallow } from "zustand/react/shallow";
+import AppRoutes from "@/RoutePaths";
+import { usePathname } from "next/navigation";
 
 const Navbar = () => {
   const { currentUser } = useAuthStore(
     useShallow((state) => ({ currentUser: state.currentUser }))
   );
-
+  const currentPath = usePathname();
   return (
-    <div className="w-full fixed top-0 max-w-[1280px] p-[20px] self-center flex flex-row items-center">
+    <div className="w-full fixed top-0 max-w-screen-lg p-[20px] self-center flex flex-row items-center">
       <Link
         href={QuizAppRoutes.Home}
         className="cursor-pointer flex flex-row items-center"
@@ -36,6 +38,16 @@ const Navbar = () => {
 
       {currentUser ? (
         <>
+          <Link
+            href={AppRoutes.Game}
+            className={`mx-2 ${
+              currentPath.startsWith(AppRoutes.Game)
+                ? "text-cyan-400 font-bold"
+                : "text-white font-[400]"
+            } font-concert text-base hover:underline ml-5`}
+          >
+            Play Game
+          </Link>
           <AnimatedButton className="ml-auto">
             <CustomTextLogo name={currentUser.username} />
           </AnimatedButton>
