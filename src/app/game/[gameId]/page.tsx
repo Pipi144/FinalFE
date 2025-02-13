@@ -7,10 +7,11 @@ import { toast } from "@/hooks/use-toast";
 import useGetGameDetail from "@/hooks/useGetGameDetail";
 import useMutateGame from "@/hooks/useMutateGame";
 import useSetGameQueryData from "@/hooks/useSetGameQueryData";
+import AppRoutes from "@/RoutePaths";
 import { findErrors } from "@/utils/helperFncs";
 import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import * as z from "zod";
 
 const schema = z.object({
@@ -44,6 +45,7 @@ const EditGame = () => {
   });
   const handleEditGame = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    e.stopPropagation();
     const formData = new FormData(e.currentTarget);
     const gameName = formData.get("gameName") as string;
     const timeLimit = parseInt(formData.get("timeLimit") as string, 10);
@@ -70,7 +72,8 @@ const EditGame = () => {
       numberRange,
     });
   };
-  if (gameDetailQuery.isFetching)
+
+  if (gameDetailQuery.isLoading)
     return <LoaderOverlay isOpen={true} message="Getting game details..." />;
   if (!gameData) return <div>Game not found</div>;
   return (
@@ -112,9 +115,23 @@ const EditGame = () => {
 
       <EditGameRule game={gameData} />
 
-      <Button className="w-full" variant="dark" type="submit">
-        Submit
-      </Button>
+      <div className="flex items-center justify-end w-full mt-4">
+        <Button
+          variant="outline"
+          className="mx-2"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            router.push(AppRoutes.Game);
+          }}
+        >
+          Cancel
+        </Button>
+
+        <Button variant="dark" type="submit">
+          Submit
+        </Button>
+      </div>
 
       <LoaderOverlay
         isOpen={editGame.isPending}

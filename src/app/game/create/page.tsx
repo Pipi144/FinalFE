@@ -117,10 +117,18 @@ const AddGame = (props: Props) => {
 
       <AddGameRule />
 
-      <Button className="w-full" variant="dark" onClick={handleAddGame}>
-        Submit
-      </Button>
-
+      <div className="flex items-center justify-end w-full mt-4">
+        <Button
+          variant="outline"
+          className="mx-2"
+          onClick={() => router.push(AppRoutes.Game)}
+        >
+          Cancel
+        </Button>
+        <Button variant="dark" onClick={handleAddGame}>
+          Submit
+        </Button>
+      </div>
       <LoaderOverlay
         isOpen={createGame.isPending}
         message="Creating game..."

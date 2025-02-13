@@ -47,3 +47,17 @@ export const addGameRuleApi = async (payload: TAddGameRulePayload) => {
     throw error;
   }
 };
+
+export const deleteGameRuleApi = async (ruleId: string) => {
+  try {
+    await axios.delete(`${baseAddress}/api/GameRule/${ruleId}`);
+  } catch (error) {
+    const axiosError = error as AxiosError<TServerError>;
+
+    if (axiosError.response?.data) {
+      throw axiosError.response.data;
+    }
+
+    throw error;
+  }
+};

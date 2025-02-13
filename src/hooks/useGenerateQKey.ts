@@ -12,7 +12,7 @@ const useGenerateQKey = () => {
     return baseQKey;
   };
   const getGameDetailQueryKey = (gameId: string): string[] => {
-    return ["game-detail", gameId];
+    return ["game-detail", gameId.toString()];
   };
   return {
     getGameListQueryKey,

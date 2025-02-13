@@ -19,7 +19,6 @@ const EditGameRule = ({ game }: Props) => {
   const { addGameRuleQueryData } = useSetGameQueryData();
   const { createGameRule } = useMutateGameRule({
     onSuccessAddGameRule: (rule) => {
-      console.log("SUCCESS ADD RULE");
       addGameRuleQueryData(rule);
       setNewNumber("");
       setNewReplaceWord("");
@@ -31,7 +30,11 @@ const EditGameRule = ({ game }: Props) => {
       });
     },
   });
-  const onAddNewRule = () => {
+  const onAddNewRule = (
+    e?: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    e?.stopPropagation();
+    e?.preventDefault();
     if (!newNumber || !newReplaceWord) {
       toast({
         title: "Fields are required",
@@ -54,9 +57,16 @@ const EditGameRule = ({ game }: Props) => {
       replacedWord: newReplaceWord,
     });
   };
+
+  const handleAddInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      onAddNewRule(e as any);
+    }
+  };
   return (
     <div className="mt-4 w-full flex-wrap">
-      <Label htmlFor={"gameRules"}>Game rules</Label>
+      <Label>Game rules</Label>
       <div className="flex items-center justify-between w-full max-w-screen-sm  my-4 flex-wrap border-[1px] border-solid border-slate-400 px-2 rounded-sm">
         <Input
           placeholder="Enter divisible number"
@@ -74,7 +84,7 @@ const EditGameRule = ({ game }: Props) => {
 
         <Button
           onClick={onAddNewRule}
-          className=" m-2 ml-auto md:ml-2"
+          className="m-2 ml-auto md:ml-2"
           variant="dark"
           disabled={createGameRule.isPending}
         >

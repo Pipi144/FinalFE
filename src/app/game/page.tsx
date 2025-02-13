@@ -49,7 +49,7 @@ const GameList = (props: Props) => {
           if (!open) setDeletedGame(undefined);
         }}
         title="Confirm delete game"
-        description={`Are you sure you want to delete ${deletedGame?.gameName}`}
+        description={`Are you sure you want to delete ***${deletedGame?.gameName}***`}
         footerContent={
           <>
             <Button variant="outline" onClick={() => setDeletedGame(undefined)}>

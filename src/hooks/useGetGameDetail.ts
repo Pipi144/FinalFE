@@ -11,6 +11,7 @@ type Props = {
 
 const useGetGameDetail = ({ gameId, onErrorGetGameDetail }: Props) => {
   const { getGameDetailQueryKey } = useGenerateQKey();
+
   return useQuery<TGame, TServerError>({
     queryKey: getGameDetailQueryKey(gameId),
     queryFn: async () => {
@@ -22,7 +23,7 @@ const useGetGameDetail = ({ gameId, onErrorGetGameDetail }: Props) => {
       }
     },
     gcTime: 1000 * 60 * 5, // Cache for 5
-    staleTime: 0, // Never stale
+    staleTime: 2 * 1000 * 60, // Never stale
   });
 };
 

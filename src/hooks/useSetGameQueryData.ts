@@ -95,9 +95,9 @@ const useSetGameQueryData = ({ addPos }: Props = { addPos: "start" }) => {
   };
   const addGameRuleQueryData = (gameRule: TGameRule) => {
     const qKey = getGameDetailQueryKey(gameRule.gameId);
+
     const gameDetailsQueryDataActive = queryClient.getQueryCache().findAll({
-      predicate: (query) =>
-        qKey.every((key) => query.queryKey.includes(key)) && query.isActive(),
+      predicate: (query) => qKey.every((key) => query.queryKey.includes(key)),
     });
     const gameDetailsQueryDataInactive = queryClient.getQueryCache().findAll({
       predicate: (query) =>
@@ -108,6 +108,7 @@ const useSetGameQueryData = ({ addPos }: Props = { addPos: "start" }) => {
       queryClient.setQueryData<TGame>(query.queryKey, (old) => {
         if (old) {
           return produce(old, (draft) => {
+            console.log("ADDED GAME RULE QUERY:", gameRule);
             draft.gameRules.push(gameRule);
 
             return draft;
@@ -148,12 +149,43 @@ const useSetGameQueryData = ({ addPos }: Props = { addPos: "start" }) => {
       queryClient.removeQueries(query);
     });
   };
+
+  const deleteGameRuleQueryData = (gameRule: TGameRule) => {
+    const qKey = getGameDetailQueryKey(gameRule.gameId);
+    const gameDetailsQueryDataActive = queryClient.getQueryCache().findAll({
+      predicate: (query) =>
+        qKey.every((key) => query.queryKey.includes(key)) && query.isActive(),
+    });
+    const gameDetailsQueryDataInactive = queryClient.getQueryCache().findAll({
+      predicate: (query) =>
+        qKey.every((key) => query.queryKey.includes(key)) && !query.isActive(),
+    });
+
+    gameDetailsQueryDataActive.forEach((query) => {
+      queryClient.setQueryData<TGame>(query.queryKey, (old) => {
+        if (old) {
+          return produce(old, (draft) => {
+            const foundGameRuleIdx = draft.gameRules.findIndex(
+              (r) => r.ruleId === gameRule.ruleId
+            );
+            if (foundGameRuleIdx !== -1)
+              draft.gameRules.splice(foundGameRuleIdx, 1);
+            return draft;
+          });
+        } else return old;
+      });
+    });
+    gameDetailsQueryDataInactive.forEach((query) => {
+      queryClient.removeQueries(query);
+    });
+  };
   return {
     addGameQueryData,
     editGameQueryData,
     addGameRuleQueryData,
     editGameRuleQueryData,
     deleteGameQueryData,
+    deleteGameRuleQueryData,
   };
 };
 

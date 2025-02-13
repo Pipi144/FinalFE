@@ -6,13 +6,19 @@ import {
 import { TServerError } from "@/models/ServerErrorRespond";
 import useGenerateMutationKey from "./useGenerateMutationKey";
 import { useMutation } from "@tanstack/react-query";
-import { addGameRuleApi, editGameRuleApi } from "@/apis/gameRule";
+import {
+  addGameRuleApi,
+  deleteGameRuleApi,
+  editGameRuleApi,
+} from "@/apis/gameRule";
 
 type Props = {
   onSuccessAddGameRule?: (rule: TGameRule) => void;
   onErrorAddGameRule?: (error: TServerError) => void;
   onSuccessEditGameRule?: (rule: TGameRule) => void;
   onErrorEditGameRule?: (error: TServerError) => void;
+  onSuccessDeleteGameRule?: (ruleId: string) => void;
+  onErrorDeleteGameRule?: (error: TServerError) => void;
 };
 
 const useMutateGameRule = (props: Props = {}) => {
@@ -47,9 +53,21 @@ const useMutateGameRule = (props: Props = {}) => {
       props.onErrorEditGameRule && props.onErrorEditGameRule(err);
     },
   });
+
+  const deleteGameRule = useMutation<any, TServerError, string>({
+    mutationKey: getMutateGameRuleKey("delete"),
+    mutationFn: deleteGameRuleApi,
+    onSuccess: (data, variables, context) => {
+      props.onSuccessDeleteGameRule && props.onSuccessDeleteGameRule(variables);
+    },
+    onError: (err) => {
+      props.onErrorDeleteGameRule && props.onErrorDeleteGameRule(err);
+    },
+  });
   return {
     createGameRule,
     editGameRule,
+    deleteGameRule,
   };
 };
 
