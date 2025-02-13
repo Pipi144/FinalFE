@@ -1,7 +1,8 @@
-import { TBasicGame } from "@/models/game";
+import { TBasicGame, TGame } from "@/models/game";
 import useGenerateQKey from "./useGenerateQKey";
 import { useQueryClient } from "@tanstack/react-query";
 import { produce } from "immer";
+import { TBasicGameRule, TGameRule } from "@/models/gameRule";
 
 type Props = {
   addPos?: "start" | "end";
@@ -65,7 +66,95 @@ const useSetGameQueryData = ({ addPos }: Props = { addPos: "start" }) => {
       queryClient.removeQueries(query);
     });
   };
-  return { addGameQueryData, editGameQueryData };
+  const deleteGameQueryData = (gameId: string) => {
+    const qKey = getGameListQueryKey({});
+    const gameListQueryDataActive = queryClient.getQueryCache().findAll({
+      predicate: (query) =>
+        qKey.every((key) => query.queryKey.includes(key)) && query.isActive(),
+    });
+    const gameListQueryDataInactive = queryClient.getQueryCache().findAll({
+      predicate: (query) =>
+        qKey.every((key) => query.queryKey.includes(key)) && !query.isActive(),
+    });
+
+    gameListQueryDataActive.forEach((query) => {
+      queryClient.setQueryData<TBasicGame[]>(query.queryKey, (old) => {
+        if (old) {
+          return produce(old, (draft) => {
+            const foundGameIdx = draft.findIndex((g) => g.gameId === gameId);
+            if (foundGameIdx !== -1) draft.splice(foundGameIdx, 1);
+
+            return draft;
+          });
+        } else return old;
+      });
+    });
+    gameListQueryDataInactive.forEach((query) => {
+      queryClient.removeQueries(query);
+    });
+  };
+  const addGameRuleQueryData = (gameRule: TGameRule) => {
+    const qKey = getGameDetailQueryKey(gameRule.gameId);
+    const gameDetailsQueryDataActive = queryClient.getQueryCache().findAll({
+      predicate: (query) =>
+        qKey.every((key) => query.queryKey.includes(key)) && query.isActive(),
+    });
+    const gameDetailsQueryDataInactive = queryClient.getQueryCache().findAll({
+      predicate: (query) =>
+        qKey.every((key) => query.queryKey.includes(key)) && !query.isActive(),
+    });
+
+    gameDetailsQueryDataActive.forEach((query) => {
+      queryClient.setQueryData<TGame>(query.queryKey, (old) => {
+        if (old) {
+          return produce(old, (draft) => {
+            draft.gameRules.push(gameRule);
+
+            return draft;
+          });
+        } else return old;
+      });
+    });
+    gameDetailsQueryDataInactive.forEach((query) => {
+      queryClient.removeQueries(query);
+    });
+  };
+
+  const editGameRuleQueryData = (gameRule: TGameRule) => {
+    const qKey = getGameDetailQueryKey(gameRule.gameId);
+    const gameDetailsQueryDataActive = queryClient.getQueryCache().findAll({
+      predicate: (query) =>
+        qKey.every((key) => query.queryKey.includes(key)) && query.isActive(),
+    });
+    const gameDetailsQueryDataInactive = queryClient.getQueryCache().findAll({
+      predicate: (query) =>
+        qKey.every((key) => query.queryKey.includes(key)) && !query.isActive(),
+    });
+
+    gameDetailsQueryDataActive.forEach((query) => {
+      queryClient.setQueryData<TGame>(query.queryKey, (old) => {
+        if (old) {
+          return produce(old, (draft) => {
+            const foundGameRule = draft.gameRules.find(
+              (r) => r.ruleId === gameRule.ruleId
+            );
+            if (foundGameRule) Object.assign(foundGameRule, gameRule);
+            return draft;
+          });
+        } else return old;
+      });
+    });
+    gameDetailsQueryDataInactive.forEach((query) => {
+      queryClient.removeQueries(query);
+    });
+  };
+  return {
+    addGameQueryData,
+    editGameQueryData,
+    addGameRuleQueryData,
+    editGameRuleQueryData,
+    deleteGameQueryData,
+  };
 };
 
 export default useSetGameQueryData;

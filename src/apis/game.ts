@@ -76,3 +76,17 @@ export const editGameApi = async (payload: TUpdateGamePayload) => {
     throw error;
   }
 };
+export const deleteGameApi = async (gameId: string) => {
+  try {
+    const res = await axios.delete(`${baseAddress}/api/Game/${gameId}`);
+    return res;
+  } catch (error) {
+    const axiosError = error as AxiosError<TServerError>;
+
+    if (axiosError.response?.data) {
+      throw axiosError.response.data; // ✅ Convert to `ServerError`
+    }
+
+    throw error;
+  }
+};

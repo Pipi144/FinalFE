@@ -7,12 +7,14 @@ import TooltipButton from "../TooltipButton";
 import { IoIosPlay } from "react-icons/io";
 import Link from "next/link";
 import AppRoutes from "@/RoutePaths";
+import { useGameContext } from "@/Providers/GameProvider";
 
 type Props = {
   game: TBasicGame;
 };
 
 const GameItem = ({ game }: Props) => {
+  const { setDeletedGame } = useGameContext();
   return (
     <TableRow className="h-fit">
       <TableCell className="font-medium" colSpan={2}>
@@ -43,6 +45,7 @@ const GameItem = ({ game }: Props) => {
             <MdOutlineDelete
               className="text-lg mx-2 cursor-pointer"
               color="red"
+              onClick={() => setDeletedGame(game)}
             />
           }
           content="Delete game"

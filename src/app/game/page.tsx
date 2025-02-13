@@ -1,15 +1,28 @@
 "use client";
+import ConfirmDialog from "@/components/ConfirmDialog";
 import GameTable from "@/components/GameTable/GameTable";
 import SearchGame from "@/components/SearchGame/SearchGame";
 import TooltipButton from "@/components/TooltipButton";
+import { Button } from "@/components/ui/button";
+import useMutateGame from "@/hooks/useMutateGame";
+import useSetGameQueryData from "@/hooks/useSetGameQueryData";
+import { useGameContext } from "@/Providers/GameProvider";
 import AppRoutes from "@/RoutePaths";
 import Link from "next/link";
-import React, { useEffect } from "react";
+import React from "react";
 import { IoIosAddCircle } from "react-icons/io";
 
 type Props = {};
 
 const GameList = (props: Props) => {
+  const { deletedGame, setDeletedGame } = useGameContext();
+  const { deleteGameQueryData } = useSetGameQueryData();
+  const { deleteGame } = useMutateGame({
+    onSuccessDeleteGame(gameId) {
+      deleteGameQueryData(gameId);
+      setDeletedGame(undefined);
+    },
+  });
   return (
     <div className="flex w-full h-full flex-col px-[20px] ">
       <div className="flex w-full justify-between items-center">
@@ -29,6 +42,29 @@ const GameList = (props: Props) => {
       <div className="flex-1 flex flex-col mt-4 overflow-hidden">
         <GameTable />
       </div>
+
+      <ConfirmDialog
+        open={!!deletedGame}
+        onOpenChange={(open) => {
+          if (!open) setDeletedGame(undefined);
+        }}
+        title="Confirm delete game"
+        description={`Are you sure you want to delete ${deletedGame?.gameName}`}
+        footerContent={
+          <>
+            <Button variant="outline" onClick={() => setDeletedGame(undefined)}>
+              Cancel
+            </Button>
+            <Button
+              variant="dark"
+              onClick={() => deleteGame.mutate(deletedGame?.gameId ?? "")}
+              disabled={deleteGame.isPending}
+            >
+              {deleteGame.isPending ? "Deleting..." : "Delete"}
+            </Button>
+          </>
+        }
+      />
     </div>
   );
 };

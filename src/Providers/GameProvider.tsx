@@ -1,4 +1,4 @@
-import { TAddGamePayload } from "@/models/game";
+import { TAddGamePayload, TBasicGame } from "@/models/game";
 import { useAuthStore } from "@/stores/authStore";
 import { produce } from "immer";
 import React, {
@@ -18,6 +18,8 @@ type TGameContextValue = {
   addGamePayload: TAddGamePayload;
   setAddGamePayload: React.Dispatch<React.SetStateAction<TAddGamePayload>>;
   resetAddGamePayload: () => void;
+  deletedGame: TBasicGame | undefined;
+  setDeletedGame: React.Dispatch<React.SetStateAction<TBasicGame | undefined>>;
 };
 const GameContext = React.createContext<TGameContextValue | null>(null);
 const GameProvider = ({ children }: Props) => {
@@ -32,6 +34,9 @@ const GameProvider = ({ children }: Props) => {
     numberRange: 10,
   });
 
+  const [deletedGame, setDeletedGame] = useState<TBasicGame | undefined>(
+    undefined
+  );
   const resetAddGamePayload = useCallback(() => {
     setAddGamePayload({
       gameName: "",
@@ -50,8 +55,10 @@ const GameProvider = ({ children }: Props) => {
       addGamePayload,
       setAddGamePayload,
       resetAddGamePayload,
+      deletedGame,
+      setDeletedGame,
     }),
-    [searchGameValue, addGamePayload, resetAddGamePayload]
+    [searchGameValue, addGamePayload, resetAddGamePayload, deletedGame]
   );
   useEffect(() => {
     if (currentUser)

@@ -110,7 +110,7 @@ const EditGame = () => {
         />
       </div>
 
-      <EditGameRule ruleList={gameData.gameRules} />
+      <EditGameRule game={gameData} />
 
       <Button className="w-full" variant="dark" type="submit">
         Submit

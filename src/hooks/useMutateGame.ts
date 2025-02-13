@@ -1,19 +1,20 @@
-import { addGameApi, editGameApi } from "@/apis/game";
+import { addGameApi, deleteGameApi, editGameApi } from "@/apis/game";
 import { TAddGamePayload, TGame, TUpdateGamePayload } from "@/models/game";
 import { TServerError } from "@/models/ServerErrorRespond";
 import { useMutation } from "@tanstack/react-query";
+import useGenerateMutationKey from "./useGenerateMutationKey";
 
 type Props = {
   onSuccessAddGame?: (game: TGame) => void;
   onErrorAddGame?: (error: TServerError) => void;
   onSuccessEditGame?: (game: TGame) => void;
   onErrorEditGame?: (error: TServerError) => void;
+  onSuccessDeleteGame?: (gameId: string) => void;
+  onErrorDeleteGame?: (error: TServerError) => void;
 };
 
-const getMutateGameKey = (action: "add" | "update" | "delete") => [
-  `game-${action}`,
-];
 const useMutateGame = (props: Props = {}) => {
+  const { getMutateGameKey } = useGenerateMutationKey();
   const createGame = useMutation<TGame, TServerError, TAddGamePayload>({
     mutationKey: getMutateGameKey("add"),
     mutationFn: addGameApi,
@@ -35,9 +36,21 @@ const useMutateGame = (props: Props = {}) => {
       props.onErrorEditGame && props.onErrorEditGame(err);
     },
   });
+
+  const deleteGame = useMutation<any, TServerError, string>({
+    mutationKey: getMutateGameKey("delete"),
+    mutationFn: deleteGameApi,
+    onSuccess: (data, variables, context) => {
+      props.onSuccessDeleteGame && props.onSuccessDeleteGame(variables);
+    },
+    onError: (err) => {
+      props.onErrorDeleteGame && props.onErrorDeleteGame(err);
+    },
+  });
   return {
     createGame,
     editGame,
+    deleteGame,
   };
 };
 
