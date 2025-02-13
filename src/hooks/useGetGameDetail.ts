@@ -7,16 +7,23 @@ import { getGameDetailApi } from "@/apis/game";
 type Props = {
   gameId: string;
   onErrorGetGameDetail?: (error: TServerError) => void;
+  onSuccessGetGameDetail?: (data: TGame) => void;
 };
 
-const useGetGameDetail = ({ gameId, onErrorGetGameDetail }: Props) => {
+const useGetGameDetail = ({
+  gameId,
+  onErrorGetGameDetail,
+  onSuccessGetGameDetail,
+}: Props) => {
   const { getGameDetailQueryKey } = useGenerateQKey();
 
   return useQuery<TGame, TServerError>({
     queryKey: getGameDetailQueryKey(gameId),
     queryFn: async () => {
       try {
-        return await getGameDetailApi(gameId);
+        const res = await getGameDetailApi(gameId);
+        onSuccessGetGameDetail?.(res);
+        return res;
       } catch (error) {
         onErrorGetGameDetail?.(error as TServerError);
         throw error;

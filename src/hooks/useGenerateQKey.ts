@@ -14,9 +14,15 @@ const useGenerateQKey = () => {
   const getGameDetailQueryKey = (gameId: string): string[] => {
     return ["game-detail", gameId.toString()];
   };
+
+  const getGameAttemptQKey = (attemptId: string): string[] => [
+    "game-attempt",
+    attemptId,
+  ];
   return {
     getGameListQueryKey,
     getGameDetailQueryKey,
+    getGameAttemptQKey,
   };
 };
 

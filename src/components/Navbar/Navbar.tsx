@@ -1,6 +1,4 @@
 "use client";
-import QuizAppRoutes from "@/RoutePaths";
-
 import Link from "next/link";
 import React, { Suspense } from "react";
 
@@ -22,9 +20,8 @@ const Navbar = () => {
   return (
     <div className="w-full fixed top-0 max-w-screen-lg p-[20px] self-center flex flex-row items-center">
       <Link
-        href={QuizAppRoutes.Home}
+        href={AppRoutes.Home}
         className="cursor-pointer flex flex-row items-center"
-        as="image"
       >
         <Image
           width={30}
@@ -43,7 +40,7 @@ const Navbar = () => {
             className={`mx-2 ${
               currentPath.startsWith(AppRoutes.Game)
                 ? "text-cyan-400 font-bold"
-                : "text-white font-[400]"
+                : "text-black font-[400]"
             } font-concert text-base hover:underline ml-5`}
           >
             Play Game
@@ -56,13 +53,13 @@ const Navbar = () => {
       ) : (
         <>
           <Link
-            href={QuizAppRoutes.Login}
+            href={AppRoutes.Login}
             className="px-[20px] py-[5px] rounded-sm ml-auto bg-white hover:bg-white hover:bg-opacity-80 text-black mr-[10px]"
           >
             Login
           </Link>
           <Link
-            href={QuizAppRoutes.Register}
+            href={AppRoutes.Register}
             className="px-[20px] py-[5px] border-[1px] border-solid border-btnDarkBorderColor
          rounded-sm bg-btnDarkBgColor hover:bg-btnDarkHoverBgColor text-white 
          transition-all duration-200 ease-linear cursor-pointer"

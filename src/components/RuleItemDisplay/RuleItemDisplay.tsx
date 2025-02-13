@@ -6,17 +6,14 @@ import { IoClose } from "react-icons/io5";
 import { useGameContext } from "@/Providers/GameProvider";
 import { produce } from "immer";
 
-type Props = { rule: TBasicGameRule; index: number };
+type Props = {
+  rule: TBasicGameRule;
+  index: number;
 
-const NewRuleItem = ({ rule, index }: Props) => {
-  const { setAddGamePayload } = useGameContext();
-  const removeRule = () => {
-    setAddGamePayload(
-      produce((draft) => {
-        draft.gameRules.splice(index, 1);
-      })
-    );
-  };
+  onRemoveRule?: (index: number) => void;
+};
+
+const RuleItemDisplay = ({ rule, index, onRemoveRule }: Props) => {
   return (
     <AnimatedDiv
       className="w-fit  mb-5 flex flex-col space-y-1.5 !text-white bg-slate-500 rounded-sm px-2 py-1"
@@ -25,7 +22,12 @@ const NewRuleItem = ({ rule, index }: Props) => {
     >
       <div className="flex items-center justify-between">
         <Label className="text-sm font-semibold">Rule {index + 1}</Label>
-        <IoClose className="text-xl ml-2 cursor-pointer" onClick={removeRule} />
+        {onRemoveRule && (
+          <IoClose
+            className="text-xl ml-2 cursor-pointer"
+            onClick={() => onRemoveRule(index)}
+          />
+        )}
       </div>
 
       <div className="mt-1 flex items-center space-x-2 text-sm">
@@ -35,4 +37,4 @@ const NewRuleItem = ({ rule, index }: Props) => {
   );
 };
 
-export default NewRuleItem;
+export default RuleItemDisplay;

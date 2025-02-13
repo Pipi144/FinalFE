@@ -23,7 +23,7 @@ const GameItem = ({ game }: Props) => {
       <TableCell colSpan={1}>
         {dayjs(game.createdAt).format("DD/MM/YYYY")}
       </TableCell>
-      <TableCell colSpan={1}>{game.timeLimit} minutes</TableCell>
+      <TableCell colSpan={1}>{game.timeLimit} seconds</TableCell>
       <TableCell colSpan={1} className="flex items-center justify-end !h-fit">
         <TooltipButton
           triggerComponent={
@@ -36,7 +36,9 @@ const GameItem = ({ game }: Props) => {
 
         <TooltipButton
           triggerComponent={
-            <IoIosPlay className="text-lg mx-2 cursor-pointer" />
+            <Link href={`${AppRoutes.Game}/${game.gameId}/play`}>
+              <IoIosPlay className="text-lg mx-2 cursor-pointer" />
+            </Link>
           }
           content="Play game"
         />

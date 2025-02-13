@@ -1,10 +1,9 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { Label } from "../ui/label";
 import { useGameContext } from "@/Providers/GameProvider";
-import NewRuleItem from "../NewRuleItem/NewRuleItem";
+import RuleItemDisplay from "../RuleItemDisplay/RuleItemDisplay";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { TBasicGameRule } from "@/models/gameRule";
 import { useToast } from "@/hooks/use-toast";
 import { produce } from "immer";
 
@@ -15,6 +14,14 @@ const AddGameRule = (props: Props) => {
   const [newReplaceWord, setNewReplaceWord] = useState("");
   const { addGamePayload, setAddGamePayload } = useGameContext();
   const { toast } = useToast();
+
+  const onRemoveRule = useCallback((index: number) => {
+    setAddGamePayload(
+      produce((draft) => {
+        draft.gameRules.splice(index, 1);
+      })
+    );
+  }, []);
   const onSubmitNewRule = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!newNumber || !newReplaceWord) {
@@ -74,7 +81,12 @@ const AddGameRule = (props: Props) => {
       </form>
       <div className="w-full flex items-center flex-wrap my-2 justify-around">
         {addGamePayload.gameRules.map((rule, index) => (
-          <NewRuleItem key={index} rule={rule} index={index} />
+          <RuleItemDisplay
+            key={index}
+            rule={rule}
+            index={index}
+            onRemoveRule={onRemoveRule}
+          />
         ))}
       </div>
     </div>

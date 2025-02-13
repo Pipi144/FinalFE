@@ -28,7 +28,7 @@ const GameProvider = ({ children }: Props) => {
   );
   const [addGamePayload, setAddGamePayload] = useState<TAddGamePayload>({
     gameName: "",
-    timeLimit: 0,
+    timeLimit: 60,
     createdByUserId: currentUser?.userId.toString() ?? "0",
     gameRules: [],
     numberRange: 10,

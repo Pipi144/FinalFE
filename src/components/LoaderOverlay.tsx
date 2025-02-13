@@ -7,11 +7,18 @@ type Props = Omit<ModalProps, "children"> & {
 
 const LoaderOverlay = ({ message, ...props }: Props) => {
   return (
-    <Modal {...props}>
+    <Modal
+      backdrop="opaque"
+      classNames={{
+        backdrop:
+          "bg-gradient-to-t from-zinc-900 to-zinc-900/10 backdrop-opacity-20",
+      }}
+      {...props}
+    >
       <ModalContent>
         {(onClose) => (
           <>
-            <ModalBody className="flex flex-col items-center justify-center w-full h-full bg-slate-400 bg-opacity-60 ">
+            <ModalBody className="flex flex-col items-center justify-center  ">
               <Spinner size="medium" className="text-white" />
               <h2 className="text-white text-lg mt-4">
                 {message ?? "Loading..."}

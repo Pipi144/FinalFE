@@ -5,7 +5,11 @@ const useGenerateMutationKey = () => {
   const getMutateGameRuleKey = (action: "add" | "update" | "delete") => [
     `gameRule-${action}`,
   ];
-  return { getMutateGameKey, getMutateGameRuleKey };
+
+  const getMutateGameAttemptKey = (
+    action: "add" | "check" | "generate-question"
+  ) => ["gameAttempt", action];
+  return { getMutateGameKey, getMutateGameRuleKey, getMutateGameAttemptKey };
 };
 
 export default useGenerateMutationKey;

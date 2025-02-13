@@ -11,7 +11,7 @@ import AppRoutes from "@/RoutePaths";
 import { findErrors } from "@/utils/helperFncs";
 import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import * as z from "zod";
 
 const schema = z.object({
@@ -72,7 +72,13 @@ const EditGame = () => {
       numberRange,
     });
   };
-
+  const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      e.stopPropagation();
+      e.currentTarget.blur();
+    }
+  };
   if (gameDetailQuery.isLoading)
     return <LoaderOverlay isOpen={true} message="Getting game details..." />;
   if (!gameData) return <div>Game not found</div>;
@@ -90,15 +96,21 @@ const EditGame = () => {
           defaultValue={gameData.gameName}
           placeholder="Enter game name"
           fieldError={errorFields.gameNameError}
+          onKeyDown={onKeyDown}
         />
 
         <TextFieldWithLabel
           name="timeLimit"
-          labelText="Time limit (minute)"
+          labelText="Time limit (second)"
           defaultValue={gameData.timeLimit}
           placeholder="Enter time limit"
           type="number"
           fieldError={errorFields.timeLimitError}
+          pattern="\d+" // only allow numbers
+          onInput={(e) => {
+            e.currentTarget.value = e.currentTarget.value.replace(/\D/g, ""); // Remove non-numeric characters
+          }}
+          onKeyDown={onKeyDown}
         />
       </div>
 
@@ -110,6 +122,11 @@ const EditGame = () => {
           placeholder="Enter max range"
           type="number"
           fieldError={errorFields.numberRangeError}
+          pattern="\d+" // only allow numbers
+          onInput={(e) => {
+            e.currentTarget.value = e.currentTarget.value.replace(/\D/g, ""); // Remove non-numeric characters
+          }}
+          onKeyDown={onKeyDown}
         />
       </div>
 

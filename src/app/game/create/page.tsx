@@ -18,7 +18,7 @@ import AppRoutes from "@/RoutePaths";
 type Props = {};
 const schema = z.object({
   gameName: z.string().min(5, "Game name required and at least 5 characters"),
-  timeLimit: z.number().int().positive("Time limit must be positive"),
+  timeLimit: z.number().min(10, "Minimum input is 10"),
   numberRange: z.number().int().positive("Number range must be positive"),
 });
 const AddGame = (props: Props) => {
@@ -95,12 +95,16 @@ const AddGame = (props: Props) => {
         />
 
         <TextFieldWithLabel
-          labelText="Time limit (minute)"
+          labelText="Time limit (second)"
           value={addGamePayload.timeLimit}
           onChange={(e) => handlePayloadChange("timeLimit", e.target.value)}
           placeholder="Enter time limit"
           type="number"
           fieldError={errorFields.timeLimitError}
+          pattern="\d+" // only allow numbers
+          onInput={(e) => {
+            e.currentTarget.value = e.currentTarget.value.replace(/\D/g, ""); // Remove non-numeric characters
+          }}
         />
       </div>
 
@@ -112,6 +116,10 @@ const AddGame = (props: Props) => {
           placeholder="Enter max range"
           type="number"
           fieldError={errorFields.numberRangeError}
+          pattern="\d+" // only allow numbers
+          onInput={(e) => {
+            e.currentTarget.value = e.currentTarget.value.replace(/\D/g, ""); // Remove non-numeric characters
+          }}
         />
       </div>
 
