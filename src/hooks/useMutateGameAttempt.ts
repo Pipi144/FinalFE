@@ -47,7 +47,7 @@ const useMutateGameAttempt = (props: Props = {}) => {
       props.onSuccessGenerateQuestion && props.onSuccessGenerateQuestion(data);
     },
     onError: (err) => {
-      props.onErrorCreateGameAttempt && props.onErrorCreateGameAttempt(err);
+      props.onErrorGenerateQuestion && props.onErrorGenerateQuestion(err);
     },
   });
   const checkQuestion = useMutation<

@@ -21,7 +21,7 @@ export const getGameListApi = async (filter?: TGetGameParams) => {
     const axiosError = error as AxiosError<TServerError>;
 
     if (axiosError.response?.data) {
-      throw axiosError.response.data; // ✅ Convert to `ServerError`
+      throw axiosError.response.data;
     }
 
     throw error;
@@ -36,7 +36,7 @@ export const addGameApi = async (payload: TAddGamePayload) => {
     const axiosError = error as AxiosError<TServerError>;
 
     if (axiosError.response?.data) {
-      throw axiosError.response.data; // ✅ Convert to `ServerError`
+      throw axiosError.response.data;
     }
 
     throw error;
@@ -51,7 +51,7 @@ export const getGameDetailApi = async (gameId: string) => {
     const axiosError = error as AxiosError<TServerError>;
 
     if (axiosError.response?.data) {
-      throw axiosError.response.data; // ✅ Convert to `ServerError`
+      throw axiosError.response.data;
     }
 
     throw error;

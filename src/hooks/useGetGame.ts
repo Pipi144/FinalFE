@@ -25,7 +25,7 @@ const useGetGame = ({ filter, onErrorGetGame }: Props = {}): UseQueryResult<
       }
     },
     gcTime: 1000 * 60 * 10, // Cache for 15 minutes
-    staleTime: 5 * 1000 * 8, // Stale after 5 minutes
+    staleTime: 60 * 1000 * 8, // Stale after 5 minutes
   });
 };
 

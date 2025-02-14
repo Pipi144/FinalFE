@@ -1,6 +1,7 @@
 "use client";
 import ConfirmDialog from "@/components/ConfirmDialog";
 import GameTable from "@/components/GameTable/GameTable";
+import LoaderOverlay from "@/components/LoaderOverlay";
 import SearchGame from "@/components/SearchGame/SearchGame";
 import TooltipButton from "@/components/TooltipButton";
 import { Button } from "@/components/ui/button";
@@ -65,6 +66,8 @@ const GameList = (props: Props) => {
           </>
         }
       />
+
+      <LoaderOverlay />
     </div>
   );
 };

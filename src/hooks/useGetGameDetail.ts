@@ -30,7 +30,7 @@ const useGetGameDetail = ({
       }
     },
     gcTime: 1000 * 60 * 5, // Cache for 5
-    staleTime: 2 * 1000 * 60, // Never stale
+    staleTime: 0, // Never stale
   });
 };
 
